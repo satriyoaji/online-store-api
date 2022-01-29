@@ -1,2 +1,7 @@
-package online_store_api
+package main
 
+import "online-store-evermos/src"
+
+func main() {
+	src.Run()
+}

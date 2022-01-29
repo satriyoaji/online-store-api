@@ -19,9 +19,10 @@ I think those bad reviews during the 12.12 event is happened because maybe a lot
 After checking by the customer service and order processing departments, it turned out that the items that performed very well at our 12.12 event were frequently misreported in inventory quantities. There are even some that have negative inventory counts. So the Order Processing department was unable to fulfill a lot of orders, and the Customer Service department called their customers and notify them that they had to cancel their orders.
 
 <h3>SOLUTION</h3><br>
-We need to sync the actual stock with item that added to cart, so we can do reduce every customer add to cart, so if the cart is 0, customer wont abble to add item to cart.
-We can restore the stock when some customer remove item from cart, so the stock will increase.
-So if we do 12.12 sale, when customer add item to cart, we can prevent it from out of stock, because there's item stock checking in API.
+We need to sync the actual stock with item that added to cart, so we can do reduce every customer add to cart of that item.
+So if the actual stock is 0, customer wont abble to add that item to cart.
+We can restore the stock when some customer remove item from cart, so the actual stock will increase.
+Then if we do 12.12 event sale, when customer add item to cart, we can prevent it from out of stock, because there's item stock checking in API.
 
 <br><h3>Technical Solution (proof of concept)</h3><br>
 <h4>HOW TO RUN API</h4>
