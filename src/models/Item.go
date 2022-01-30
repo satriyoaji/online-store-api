@@ -68,16 +68,22 @@ func (p *Item) FindItemByID(db *gorm.DB, id uint64) (*Item, error) {
 	return p, nil
 }
 
-func (p *Item) UpdateItem(db *gorm.DB) (*Item, error) {
-	err := db.Debug().Model(&Item{}).Where("id = ?", p.ID).Updates(Item{
-		Title:     p.Title,
-		Stock:     p.Stock,
-		Price:     p.Price,
-		UpdatedAt: time.Time{},
-	}).Error
+func (p *Item) UpdateItem(db *gorm.DB, id uint64) (*Item, error) {
+	errUpdate := db.Debug().Model(&Item{}).Where("id = ?", id).Take(&Item{}).UpdateColumns(
+		map[string]interface{}{
+			"title":     p.Title,
+			"stock":     p.Stock,
+			"price":     p.Price,
+			"updated_at": time.Time{},
+		},
+	).Error
+	if errUpdate != nil {
+		return &Item{}, errUpdate
+	}
 
-	if err != nil {
-		return &Item{}, err
+	errGetOne := db.Debug().Model(&Item{}).Where("id = ?", id).Take(&p).Error
+	if errGetOne != nil {
+		return &Item{}, errGetOne
 	}
 
 	return p, nil
