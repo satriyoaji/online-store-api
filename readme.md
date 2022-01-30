@@ -16,19 +16,20 @@ requested help from our Customer Service department to call our customers and no
 
 <h3>EXPLANATION PROBLEM</h3>
 I think those bad reviews during the 12.12 event is happened because maybe a lot of customer orders were canceled because they got information that the stock was unavailable.
-After checking by the customer service and order processing departments, it turned out that the items that performed very well at our 12.12 event were frequently misreported in inventory quantities. There are even some that have negative inventory counts. So the Order Processing department was unable to fulfill a lot of orders, and the Customer Service department called their customers and notify them that they had to cancel their orders.
+After checking by the customer service and order processing departments, it turned out that the items that performed very well at the 12.12 event were frequently misreported in inventory quantities. There are even some that have negative inventory counts. 
+So the Order Processing department was unable to fulfill a lot of orders, and the Customer Service department notify their customers that they had to cancel their orders.
 
 <h3>SOLUTION</h3><br>
-We need to sync the actual stock with item that added to cart, so we can do reduce every customer add to cart of that item.
-So if the actual stock is 0, customer wont abble to add that item to cart.
-We can restore the stock when some customer remove item from cart, so the actual stock will increase.
-Then if we do 12.12 event sale, when customer add item to cart, we can prevent it from out of stock, because there's item stock checking in API.
+We need to sync the general stock with item that will have been at customer's checkout, 
+so we can do reduce general stock before customer add to cart or notify customer that stock in unavailable when checkout that item.
+So if the general stock of that item is 0, customer won't able to add that item to cart.
+Then if we do 12.12 event sale, when customer going to checkout that item, we can prevent it from out of stock, because there's item stock checking in API.
 
 <br><h3>Technical Solution (proof of concept)</h3><br>
 <h4>HOW TO RUN API</h4>
 1. clone this repository<br>
-2. get all required library<br>
-3. config .env with your database (using mysql)<br>
+2. get all required library using command `go mod tidy` on root path<br>
+3. copy .env.example to file .env and config it with your database (using mysql)<br>
 4. run the main.go<br>
 5. its will auto migrate the database from models and there are seeders to fill the database<br>
 
