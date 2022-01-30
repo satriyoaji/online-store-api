@@ -32,8 +32,6 @@ func (s *Server) CreateItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Printf(item.Title)
-
 	itemCreated, err := item.CreateItem(s.DB)
 	if err != nil {
 		formattedError := formaterror.FormatError(err.Error())
@@ -67,7 +65,6 @@ func (s *Server) GetItem(w http.ResponseWriter, r *http.Request) {
 	item := models.Item{}
 	itemFound, err := item.FindItemByID(s.DB, pid)
 	if err != nil {
-		fmt.Println(err.Error())
 		responses.ERROR(w, http.StatusInternalServerError, err)
 		return
 	}
@@ -79,15 +76,23 @@ func (s *Server) UpdateItem(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	uid, err := strconv.ParseUint(vars["id"], 10, 32)
 	if err != nil {
-		fmt.Println(err.Error())
 		responses.ERROR(w, http.StatusBadRequest, err)
 		return
 	}
 	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		responses.ERROR(w, http.StatusUnprocessableEntity, err)
+		return
+	}
 
 	item := models.Item{}
-
 	err = json.Unmarshal(body, &item)
+	if err != nil {
+		responses.ERROR(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+
+	err = item.Validate()
 	if err != nil {
 		responses.ERROR(w, http.StatusUnprocessableEntity, err)
 		return
