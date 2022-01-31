@@ -25,7 +25,7 @@ so we can do reduce general stock before customer add to cart or notify customer
 So if the general stock of that item is 0, customer won't able to add that item to cart.
 Then if we do 12.12 event sale, when customer going to checkout that item, we can prevent it from out of stock, because there's item stock checking in API.
 
-<br><h3>Technical Solution (proof of concept)</h3><br>
+<br><h3>Technical Solution (proof of concept)</h3>
 <h4>HOW TO RUN API</h4>
 1. clone this repository<br>
 2. get all required library using command `go mod tidy` on root path<br>
@@ -33,4 +33,17 @@ Then if we do 12.12 event sale, when customer going to checkout that item, we ca
 4. run the main.go<br>
 5. its will auto migrate the database from models and there are seeders to fill the database<br>
 
+#### HOW TO RUN UNIT TEST (Create new order API) ####
+1. on the root directory, run in command line
+    ```bash
+    go test -v -run TestConnection
+    ```
+   <br>
+2. Then open new terminal, on the root directory, run in command line
+    ```bash
+    go test -v -run TestCreateNewOrder
+    ```
+   <br>
+3. So you'll see the response of API Create New Order<br>
 
+#### or you can run throughly the `test.http` file ####
