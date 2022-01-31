@@ -34,22 +34,22 @@ var items = []models.Item{
 }
 
 func Load(db *gorm.DB) {
-	err := db.Debug().DropTableIfExists(&models.User{}, &models.Item{}, &models.CartItem{}).Error
+	err := db.Debug().DropTableIfExists(&models.User{}, &models.Item{}, &models.Order{}).Error
 	if err != nil {
 		log.Fatalf("cannot drop table : %v", err)
 	}
 
-	err = db.Debug().AutoMigrate(&models.User{}, &models.Item{}, &models.CartItem{}).Error
+	err = db.Debug().AutoMigrate(&models.User{}, &models.Item{}, &models.Order{}).Error
 	if err != nil {
 		log.Fatalf("cannot migrate table: %v", err)
 	}
 
-	err = db.Debug().Model(&models.CartItem{}).AddForeignKey("id_user", "users(id)", "cascade", "cascade").Error
+	err = db.Debug().Model(&models.Order{}).AddForeignKey("id_user", "users(id)", "cascade", "cascade").Error
 	if err != nil {
 		log.Fatalf("attaching foreign key error: %v", err)
 	}
 
-	err = db.Debug().Model(&models.CartItem{}).AddForeignKey("id_item", "items(id)", "cascade", "cascade").Error
+	err = db.Debug().Model(&models.Order{}).AddForeignKey("id_item", "items(id)", "cascade", "cascade").Error
 	if err != nil {
 		log.Fatalf("attaching foreign key error: %v", err)
 	}

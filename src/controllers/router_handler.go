@@ -16,4 +16,8 @@ func (s *Server) initializeRoutes() {
 	s.Router.HandleFunc("/users", middlewares.SetMiddlewareJSON(s.GetUsers)).Methods("GET")
 	s.Router.HandleFunc("/users/{id}", middlewares.SetMiddlewareJSON(s.GetUser)).Methods("GET")
 	s.Router.HandleFunc("/users/{id}", middlewares.SetMiddlewareJSON(s.UpdateUser)).Methods("PUT")
+
+	// Order Routes
+	s.Router.HandleFunc("/orders/{id}", middlewares.SetMiddlewareJSON(s.GetOrderByUID)).Methods("GET")
+	s.Router.HandleFunc("/orders", middlewares.SetMiddlewareJSON(s.AddOrder)).Methods("POST")
 }

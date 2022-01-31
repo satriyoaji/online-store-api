@@ -102,9 +102,9 @@ func (p *Item) DeleteItem(db *gorm.DB, id uint64) (int64, error) {
 	return db.RowsAffected, nil
 }
 
-func (p *Item) DecreaseItemQty(db *gorm.DB, id uint64) (*Item, error) {
+func (p *Item) DecreaseItemQty(db *gorm.DB, id uint64, qty uint64) (*Item, error) {
 	err := db.Debug().Model(&Item{}).Where("id = ?", id).Updates(Item{
-		Stock:     p.Stock - 1,
+		Stock:     p.Stock-qty,
 		UpdatedAt: time.Time{},
 	}).Error
 

@@ -4,11 +4,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
+	"io/ioutil"
+	"net/http"
 	"online-store-evermos/src/formaterror"
 	"online-store-evermos/src/models"
 	"online-store-evermos/src/responses"
-	"io/ioutil"
-	"net/http"
 	"strconv"
 )
 
@@ -40,7 +40,8 @@ func (s *Server) CreateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Location", fmt.Sprintf("%s%s/%d", r.Host, r.RequestURI, userCreated.ID))
-	responses.JSON(w, http.StatusCreated, userCreated)
+	webResponse := responses.GenerateResponse(http.StatusCreated, "New user created !", userCreated)
+	responses.JSON(w, http.StatusCreated, webResponse)
 }
 
 func (s *Server) GetUsers(w http.ResponseWriter, _ *http.Request) {
@@ -51,7 +52,9 @@ func (s *Server) GetUsers(w http.ResponseWriter, _ *http.Request) {
 		responses.ERROR(w, http.StatusInternalServerError, err)
 		return
 	}
-	responses.JSON(w, http.StatusOK, users)
+
+	webResponse := responses.GenerateResponse(http.StatusOK, "User(s) found !", users)
+	responses.JSON(w, http.StatusOK, webResponse)
 }
 
 func (s *Server) GetUser(w http.ResponseWriter, r *http.Request) {
@@ -68,7 +71,8 @@ func (s *Server) GetUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	responses.JSON(w, http.StatusOK, userFound)
+	webResponse := responses.GenerateResponse(http.StatusOK, "User found !", userFound)
+	responses.JSON(w, http.StatusOK, webResponse)
 }
 
 func (s *Server) UpdateUser(w http.ResponseWriter, r *http.Request) {
@@ -105,7 +109,8 @@ func (s *Server) UpdateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	responses.JSON(w, http.StatusOK, updatedUser)
+	webResponse := responses.GenerateResponse(http.StatusOK, "User updated !", updatedUser)
+	responses.JSON(w, http.StatusOK, webResponse)
 }
 
 func (s *Server) DeleteUser(w http.ResponseWriter, r *http.Request) {
@@ -125,5 +130,6 @@ func (s *Server) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Entity", fmt.Sprintf("%d", uid))
-	responses.JSON(w, http.StatusNoContent, "")
+	webResponse := responses.GenerateResponse(http.StatusOK, "User deleted !", "")
+	responses.JSON(w, http.StatusNoContent, webResponse)
 }

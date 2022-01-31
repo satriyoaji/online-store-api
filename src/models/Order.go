@@ -2,22 +2,24 @@ package models
 
 import (
 	"errors"
+	"fmt"
 	"github.com/jinzhu/gorm"
+	helper "online-store-evermos/src/helpers"
 	"time"
 )
 
-type CartItem struct {
+type Order struct {
 	ID        uint64    `gorm:"primary_key;auto_increment" json:"id"`
 	IDUser    uint64    `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;size:25; not null" json:"id_user"`
-	User	  User		`gorm:"foreignKey:IDUser"`
+	//User	  User		`gorm:"foreignKey:IDUser"`
 	IDItem    uint64    `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;size:25; not null" json:"id_item"`
-	Item	  Item		`gorm:"foreignKey:IDItem"`
+	//Item	  Item		`gorm:"foreignKey:IDItem"`
 	Qty       uint64    `gorm:"size:25; not null" json:"qty"`
 	CreatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
 	UpdatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
 }
 
-func (p *CartItem) Prepare() {
+func (p *Order) Prepare() {
 	p.ID = 0
 	p.IDUser = 0
 	p.IDItem = 0
@@ -26,7 +28,7 @@ func (p *CartItem) Prepare() {
 	p.UpdatedAt = time.Now()
 }
 
-func (p *CartItem) Validate() error {
+func (p *Order) Validate() error {
 	if p.IDItem < 1 {
 		return errors.New("required ID Item")
 	}
@@ -39,43 +41,47 @@ func (p *CartItem) Validate() error {
 	return nil
 }
 
-func (p *CartItem) AddToCart(db *gorm.DB) (*CartItem, error) {
+func (p *Order) AddOrder(db *gorm.DB) (*Order, error) {
+	tx := db.Begin()
+	defer helper.CommitOrRollback(tx)
+
 	item := &Item{}
 	it, err := item.FindItemByID(db, p.IDItem)
 	if err != nil {
-		return &CartItem{}, err
+		return &Order{}, err
+	}
+	if it.Stock < 1 || it.Stock <= p.Qty {
+		return &Order{}, errors.New("stock is unavailable !")
 	}
 
 	user := &User{}
 	_, err = user.FindUserById(db, p.IDUser)
 	if err != nil {
-		return &CartItem{}, err
+		return &Order{}, err
 	}
 
-	if it.Stock < 1 {
-		return &CartItem{}, errors.New("stock is 0")
-	}
-
-	err = db.Debug().Model(&CartItem{}).Create(&p).Error
-
+	// reduce item stock depends on order qty
+	_, err = item.DecreaseItemQty(db, p.IDItem, p.Qty)
 	if err != nil {
-		return &CartItem{}, err
+		return &Order{}, err
 	}
 
-	_, err = item.DecreaseItemQty(db, p.IDItem)
+	// create new Order
+	err = db.Debug().Model(&Order{}).Create(&p).Error
 	if err != nil {
-		return &CartItem{}, err
+		fmt.Println("errr: ", err.Error())
+		return &Order{}, err
 	}
 
 	return p, nil
 }
 
-func (p *CartItem) FindAllCartByUID(db *gorm.DB, uid uint64) (*[]CartItem, error) {
-	var carts []CartItem
-	err := db.Debug().Model(&CartItem{}).Where("id_user = ?", uid).Limit(100).Find(&carts).Error
+func (p *Order) FindAllOrderByUID(db *gorm.DB, uid uint64) (*[]Order, error) {
+	var orders []Order
+	err := db.Debug().Model(&Order{}).Where("id_user = ?", uid).Limit(100).Find(&orders).Error
 	if err != nil {
-		return &[]CartItem{}, err
+		return &[]Order{}, err
 	}
 
-	return &carts, nil
+	return &orders, nil
 }

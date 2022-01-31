@@ -4,11 +4,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
+	"io/ioutil"
+	"net/http"
 	"online-store-evermos/src/formaterror"
 	"online-store-evermos/src/models"
 	"online-store-evermos/src/responses"
-	"io/ioutil"
-	"net/http"
 	"strconv"
 )
 
@@ -40,7 +40,8 @@ func (s *Server) CreateItem(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Location", fmt.Sprintf("%s%s/%d", r.Host, r.RequestURI, item.ID))
-	responses.JSON(w, http.StatusCreated, itemCreated)
+	webResponse := responses.GenerateResponse(http.StatusCreated, "New item created !", itemCreated)
+	responses.JSON(w, http.StatusCreated, webResponse)
 }
 
 func (s *Server) GetItems(w http.ResponseWriter, _ *http.Request) {
@@ -51,7 +52,9 @@ func (s *Server) GetItems(w http.ResponseWriter, _ *http.Request) {
 		responses.ERROR(w, http.StatusInternalServerError, err)
 		return
 	}
-	responses.JSON(w, http.StatusOK, items)
+
+	webResponse := responses.GenerateResponse(http.StatusOK, "Item(s) found !", items)
+	responses.JSON(w, http.StatusOK, webResponse)
 }
 
 func (s *Server) GetItem(w http.ResponseWriter, r *http.Request) {
@@ -69,7 +72,8 @@ func (s *Server) GetItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	responses.JSON(w, http.StatusOK, itemFound)
+	webResponse := responses.GenerateResponse(http.StatusOK, "Item found !", itemFound)
+	responses.JSON(w, http.StatusOK, webResponse)
 }
 
 func (s *Server) UpdateItem(w http.ResponseWriter, r *http.Request) {
@@ -104,5 +108,6 @@ func (s *Server) UpdateItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	responses.JSON(w, http.StatusOK, itemUpdate)
+	webResponse := responses.GenerateResponse(http.StatusOK, "Item updated !", itemUpdate)
+	responses.JSON(w, http.StatusOK, webResponse)
 }
