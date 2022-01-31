@@ -1,0 +1,14 @@
+### Get all todos
+GET http://127.0.0.1:8000/orders/1
+Accept: application/json
+
+### Create Order item with id_user, id_item, qty
+POST http://127.0.0.1:8000/orders
+Accept: application/json
+Content-Type: application/json
+
+{
+  "id_user" : 1,
+  "id_item" : 1,
+  "qty" : 3
+}
