@@ -29,7 +29,7 @@ Then if we do 12.12 event sale, when customer going to checkout that item, we ca
 #### HOW TO RUN API ####
 1. clone this repository<br>
 2. get all required library using command `go mod tidy` on root path<br>
-3. copy .env.example to file .env and config it with your database (using mysql)<br>
+3. copy **.env.example** to file **.env** and config it with your database (using mysql)<br>
 4. run the main.go<br>
 5. its will auto migrate the database from models and there are seeders to fill the database<br>
 
