@@ -19,7 +19,7 @@ I think those bad reviews during the 12.12 event is happened because maybe a lot
 After checking by the customer service and order processing departments, it turned out that the items that performed very well at the 12.12 event were frequently misreported in inventory quantities. There are even some that have negative inventory counts. 
 So the Order Processing department was unable to fulfill a lot of orders, and the Customer Service department notify their customers that they had to cancel their orders.
 
-<h3>SOLUTION</h3><br>
+### SOLUTION ###
 We need to sync the general stock with item that will have been at customer's checkout, 
 so we can do reduce general stock before customer add to cart or notify customer that stock in unavailable when checkout that item.
 So if the general stock of that item is 0, customer won't able to add that item to cart.
